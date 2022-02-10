@@ -4,17 +4,20 @@ class Ship {
         this.firepower = firepower
         this.accuracy = accuracy
     }
-    attack (target) {
-        if (this.accuracy < Math.random()) {
-            target.hull -= this.firepower
-        }
-        // alert ('It missed!')
-    }
 }
 
 class USSSchwarzenegger extends Ship {
     constructor (hull, firepower, accuracy) {
         super(hull, firepower, accuracy)
+    }
+    attack (target) {
+        if (this.accuracy < Math.random()) {
+            target.hull -= this.firepower
+            alert('Your attack hit!')
+        }
+        else {
+            alert('Your attack missed!')
+        }
     }
 }
 
@@ -29,6 +32,15 @@ class AlienShip extends Ship {
             let firepower = Math.floor(Math.random() * 3) + 2
             let accuracy = (Math.floor(Math.random() * 3) + 6) / 10
             this.enemies.push(new AlienShip(hull, firepower, accuracy))
+        }
+    }
+    attack (target) {
+        if (this.accuracy < Math.random()) {
+            target.hull -= this.firepower
+            alert('The enemy attack hit!')
+        }
+        else {
+            alert('The enemy attack missed!')
         }
     }
 }
@@ -47,7 +59,7 @@ class Game {
             else {
                 opp.attack(pl)
                 if (pl.hull <= 0) {
-                    alert('You were defeated! Try again next time!')
+                    alert('You were defeated! All hope is lost.')
                     this.proceed = 'no'
                 }
             }
@@ -78,17 +90,19 @@ class Game {
                         aliens.enemies.pop()
                         enemiesDefeated++
                         if (aliens.enemies.length > 0) {
+                            aliens.enemies.length > 1 ? alert(`There are ${aliens.enemies.length} enemies left.`) : alert(`There is 1 enemy left.`)
                             this.proceed = prompt('Would you like to continue?', 'Please type "yes", "no", or "retreat"')
                             this.proceed ? this.proceed : this.proceed = 'no'
                         }
                     }
                     else {
+                        alert(`Nice try Captain. You defeated ${enemiesDefeated} enemy ships.`)
                         break
                     }
                 }
                 else if (this.proceed.toLowerCase() === 'no' || this.proceed.toLowerCase() === 'retreat') {
                     enemiesDefeated == 1 ? alert(`You defeated ${enemiesDefeated} enemy ship!`) : alert(`You defeated ${enemiesDefeated} enemy ships!`)
-                    alert('Sorry to see you go! Come visit again!')
+                    alert('Sorry to see you go! Come visit again Captain!')
                     break
                 }
                 else {
@@ -97,11 +111,11 @@ class Game {
                 }
             }
             if (aliens.enemies.length <= 0) {
-                alert('Congratulations, you defeated them all!')
+                alert('Congratulations Captain! You defeated them all and saved our planet!')
             } 
         }
         else if (this.proceed.toLowerCase() === 'no') {
-            alert('Sorry to see you go! Come visit again!')
+            alert('Sorry to see you go! Come visit again Captain!')
         }
         else {
             alert('Error: Unknown entry\nPlease refresh the browser and enter yes, no, or press cancel.')
