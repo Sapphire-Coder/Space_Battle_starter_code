@@ -6,9 +6,9 @@ class Ship {
     }
     attack (target) {
         if (this.accuracy < Math.random()) {
-            return target.hull -= this.firepower
+            target.hull -= this.firepower
         }
-        alert ('It missed!')
+        // alert ('It missed!')
     }
 }
 
@@ -33,55 +33,78 @@ class AlienShip extends Ship {
     }
 }
 
-// let player = new USSSchwarzenegger(20, 5, 0.7)
-// let aliens = new AlienShip
-// aliens.createEnemies(6)
-// console.log(aliens.enemies.length)
-// console.log(player.attack(aliens.enemies[0]))
-
-
-// attempted test prompt to see if it would populate in html window
-// let varA = prompt('This is a test to see if this works', 'The default version of the test')
-// // console.log(varA) this returns whatever was typed in the prompt box
-// let testAtk = prompt('Test attack, type yes', 'Please type "yes" or "no"')
-// if (testAtk == 'yes') {
-//     player.attack(aliens.enemies[0])
-// }
-
-// document.querySelector('#playerInfo').innerHTML = `Hull : ${player.hull} <br> FirePower : ${player.firepower} <br> Accuracy : ${player.accuracy}`
-// document.querySelector('#enemyInfo').innerHTML = `Hull : ${aliens.enemies[0].hull} <br> FirePower : ${aliens.enemies[0].firepower} <br> Accuracy : ${aliens.enemies[0].accuracy}`
-
-console.log(aliens.enemies[0])
-console.log(player)
-
 class Game {
     constructor () {
         this.playerInfo = document.querySelector('#playerInfo')
         this.enemyInfo = document.querySelector('#enemyInfo')
     }
+    attackLoop(opp, pl) {
+        while(opp.hull > 0 && pl.hull > 0) {
+            pl.attack(opp)
+            if (opp.hull <= 0) {
+                alert('You defeated the enemy ship!')
+            }
+            else {
+                opp.attack(pl)
+                if (pl.hull <= 0) {
+                    alert('You were defeated! Try again next time!')
+                    this.proceed = 'no'
+                }
+            }
+        }
+    }
+    
     startGame () {
         this.proceed = 'yes'
         let player = new USSSchwarzenegger(20, 5, 0.7)
         let aliens = new AlienShip
         aliens.createEnemies(6)
+        let enemiesDefeated = 0
+        let alienIndex = aliens.enemies.length - 1
         this.playerInfo.innerHTML = `Hull : ${player.hull} <br> FirePower : ${player.firepower} <br> Accuracy : ${player.accuracy}`
-        this.enemyInfo.innerHTML = `Hull : ${aliens.enemies[0].hull} <br> FirePower : ${aliens.enemies[0].firepower} <br> Accuracy : ${aliens.enemies[0].accuracy}`
+        this.enemyInfo.innerHTML = `Hull : ${aliens.enemies[alienIndex].hull} <br> FirePower : ${aliens.enemies[alienIndex].firepower} <br> Accuracy : ${aliens.enemies[alienIndex].accuracy}`
 
         alert('Welcome to Space Battle! You will be facing off against aliens and have to save our planet!')
         this.proceed = prompt('Would you like to start the battle?', 'Please type "yes" or "no"' )
+        this.proceed ? this.proceed : this.proceed = 'no'
 
         if (this.proceed.toLowerCase() === 'yes') {
-            aliens.enemies.forEach(enemyShip => {
+            for (let i = aliens.enemies.length - 1; i >= 0; i--) {
                 if (this.proceed.toLowerCase() === 'yes') {
-                        
+                    this.attackLoop(aliens.enemies[i], player)
+                    this.playerInfo.innerHTML = `Hull : ${player.hull} <br> FirePower : ${player.firepower} <br> Accuracy : ${player.accuracy}`
+                    this.enemyInfo.innerHTML = `Hull : ${aliens.enemies[i].hull} <br> FirePower : ${aliens.enemies[i].firepower} <br> Accuracy : ${aliens.enemies[i].accuracy}`
+                    if (aliens.enemies[i].hull <= 0) {
+                        aliens.enemies.pop()
+                        enemiesDefeated++
+                        if (aliens.enemies.length > 0) {
+                            this.proceed = prompt('Would you like to continue?', 'Please type "yes", "no", or "retreat"')
+                            this.proceed ? this.proceed : this.proceed = 'no'
+                        }
+                    }
+                    else {
+                        break
+                    }
                 }
-            })
+                else if (this.proceed.toLowerCase() === 'no' || this.proceed.toLowerCase() === 'retreat') {
+                    enemiesDefeated == 1 ? alert(`You defeated ${enemiesDefeated} enemy ship!`) : alert(`You defeated ${enemiesDefeated} enemy ships!`)
+                    alert('Sorry to see you go! Come visit again!')
+                    break
+                }
+                else {
+                    alert('Error: Unknown entry\nPlease refresh the browser and enter yes, no, or press cancel.')
+                    break
+                }
+            }
+            if (aliens.enemies.length <= 0) {
+                alert('Congratulations, you defeated them all!')
+            } 
         }
         else if (this.proceed.toLowerCase() === 'no') {
-            alert('We are sorry to see you go! Come visit us again!')
+            alert('Sorry to see you go! Come visit again!')
         }
         else {
-            alert('Please')
+            alert('Error: Unknown entry\nPlease refresh the browser and enter yes, no, or press cancel.')
         }
     } // This is the end of the start game function
 }
