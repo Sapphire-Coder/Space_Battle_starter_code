@@ -25,8 +25,9 @@ class AlienShip extends Ship {
     constructor (hull, firepower, accuracy) {
         super(hull, firepower, accuracy)
     }
-    createEnemies(num) {
+    createEnemies() {
         this.enemies = []
+        let num = Math.floor(Math.random() * 6) + 5
         for (let i = 0; i < num; i++) {
             let hull = Math.floor(Math.random() * 4) + 3
             let firepower = Math.floor(Math.random() * 3) + 2
@@ -70,7 +71,7 @@ class Game {
         this.proceed = 'yes'
         let player = new USSSchwarzenegger(20, 5, 0.7)
         let aliens = new AlienShip
-        aliens.createEnemies(6)
+        aliens.createEnemies()
         let enemiesDefeated = 0
         let alienIndex = aliens.enemies.length - 1
         this.playerInfo.innerHTML = `Hull : ${player.hull} <br> FirePower : ${player.firepower} <br> Accuracy : ${player.accuracy}`
@@ -112,6 +113,7 @@ class Game {
                 }
             }
             if (aliens.enemies.length <= 0) {
+                enemiesDefeated == 1 ? alert(`You defeated ${enemiesDefeated} enemy ship!`) : alert(`You defeated ${enemiesDefeated} enemy ships!`)
                 alert('Congratulations Captain! You defeated them all and saved our planet!')
             } 
         }
