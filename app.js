@@ -128,3 +128,5 @@ class Game {
 
 let x = new Game
 x.startGame()
+// let button = document.querySelector('#start')
+// button.onclick(x.startGame())
