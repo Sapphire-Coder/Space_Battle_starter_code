@@ -11,7 +11,7 @@ class USSSchwarzenegger extends Ship {
         super(hull, firepower, accuracy)
     }
     attack (target) {
-        if (this.accuracy < Math.random()) {
+        if (this.accuracy >= Math.random()) {
             target.hull -= this.firepower
             alert('Your attack hit!')
         }
@@ -35,7 +35,7 @@ class AlienShip extends Ship {
         }
     }
     attack (target) {
-        if (this.accuracy < Math.random()) {
+        if (this.accuracy >= Math.random()) {
             target.hull -= this.firepower
             alert('The enemy attack hit!')
         }
@@ -90,6 +90,7 @@ class Game {
                         aliens.enemies.pop()
                         enemiesDefeated++
                         if (aliens.enemies.length > 0) {
+                            alert(`You have ${player.hull} health left.`)
                             aliens.enemies.length > 1 ? alert(`There are ${aliens.enemies.length} enemies left.`) : alert(`There is 1 enemy left.`)
                             this.proceed = prompt('Would you like to continue?', 'Please type "yes", "no", or "retreat"')
                             this.proceed ? this.proceed : this.proceed = 'no'
